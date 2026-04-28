@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>For Mikaela</title>
+
+  <!-- CSS file must be in the same folder as index.html -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HOME SCREEN -->
+  <div id="home" class="screen">
+    <div class="envelopeWrapper" onclick="openEnvelope()">
+      <img id="envelope" class="envelope" src="images/envelope1.png" alt="Envelope" />
+      <div class="shadow"></div>
+    </div>
+
+    <h1>For Mikaela</h1>
+    <p class="hint">click mo letter sige na</p>
+  </div>
+
+  <!-- MESSAGE SCREEN -->
+  <div id="messageScreen" class="screen hidden">
+    <div class="letterBox">
+      <h2>Dear Mikaela,</h2>
+
+      <p id="letterText"></p>
+      <span id="cursor">|</span>
+
+      <!-- CAKE SECTION -->
+      <div id="cakeSection" class="cakeSection hidden">
+        <p class="cakeInstruction">Drag mo yung cake</p>
+
+        <div class="cakeGame">
+          <div id="sadDropArea" class="sadDropArea">
+            <img id="mikaelaImage" src="images/sad.png" class="mikaelaPic" alt="Sad Mikaela" />
+          </div>
+
+          <img id="cakeImage" src="images/cake.png" class="cakePic" alt="Cake" draggable="true" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS file must be in the same folder as index.html -->
+  <script src="script.js"></script>
+</body>
+</html>

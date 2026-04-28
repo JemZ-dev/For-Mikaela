@@ -1,0 +1,324 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --screen-padding: clamp(16px, 4vw, 32px);
+  --envelope-width: min(78vw, 320px);
+  --card-radius: clamp(20px, 4vw, 28px);
+  --card-padding: clamp(20px, 4vw, 35px);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  font-family: "Georgia", serif;
+  background:
+    radial-gradient(circle at top, #fff7fb, #ffd6e8 45%, #ffc2dc);
+  overflow-x: hidden;
+  overflow-y: auto;
+  color: #7a2f4f;
+}
+
+/* Screens */
+.screen {
+  min-height: 100vh;
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  padding: var(--screen-padding);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Envelope container */
+.envelopeWrapper {
+  position: relative;
+  width: var(--envelope-width);
+  height: calc(var(--envelope-width) * 0.81);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  animation: float 2.5s ease-in-out infinite;
+  transition: transform 0.4s ease;
+}
+
+.envelopeWrapper:hover {
+  transform: scale(1.05);
+}
+
+/* Envelope image */
+.envelope {
+  width: 100%;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 2;
+  user-select: none;
+  pointer-events: none;
+  filter: drop-shadow(0 0 18px rgba(255, 120, 170, 0.45));
+}
+
+/* When opening */
+.envelopeWrapper.opening {
+  animation: none;
+  transform: translateY(-8px) scale(1.03);
+}
+
+/* Shadow under envelope */
+.shadow {
+  width: min(66%, 210px);
+  height: clamp(18px, 5vw, 28px);
+  background: rgba(122, 47, 79, 0.25);
+  border-radius: 50%;
+  filter: blur(12px);
+  position: absolute;
+  left: 50%;
+  bottom: max(10px, 6%);
+  transform: translateX(-50%);
+  z-index: 1;
+  animation: shadowPulse 2.5s ease-in-out infinite;
+}
+
+.envelopeWrapper.opening .shadow {
+  animation: none;
+  transform: translateX(-50%) scale(0.8);
+  opacity: 0.16;
+  transition: all 0.4s ease;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-18px);
+  }
+}
+
+/* Shadow animation */
+@keyframes shadowPulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.28;
+  }
+
+  50% {
+    transform: translateX(-50%) scale(0.75);
+    opacity: 0.16;
+  }
+}
+
+/* Home title */
+h1 {
+  margin-top: clamp(18px, 4vw, 35px);
+  margin-bottom: 5px;
+  font-size: clamp(28px, 6vw, 38px);
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.hint {
+  font-family: Arial, sans-serif;
+  font-size: clamp(14px, 2.7vw, 15px);
+  opacity: 0.75;
+  text-align: center;
+}
+
+/* Letter box */
+.letterBox {
+  width: min(100%, 620px);
+  max-height: min(80vh, 80svh);
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+  box-shadow: 0 20px 45px rgba(122, 47, 79, 0.25);
+  animation: popUp 0.8s ease;
+}
+
+.letterBox h2 {
+  margin-top: 0;
+  font-size: clamp(23px, 4.5vw, 28px);
+  color: #b44770;
+}
+
+#letterText {
+  font-size: clamp(16px, 3.5vw, 18px);
+  line-height: 1.75;
+  white-space: pre-line;
+}
+
+#cursor {
+  font-size: clamp(18px, 4vw, 22px);
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes popUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Cake section */
+.cakeSection {
+  margin-top: clamp(24px, 5vw, 35px);
+  padding-top: clamp(18px, 4vw, 25px);
+  border-top: 1px solid rgba(180, 71, 112, 0.25);
+  animation: fadeInCake 0.8s ease forwards;
+}
+
+.cakeInstruction {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: clamp(14px, 2.7vw, 15px);
+  color: #b44770;
+  margin-bottom: clamp(16px, 4vw, 20px);
+}
+
+.cakeGame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(20px, 6vw, 45px);
+  flex-wrap: wrap;
+}
+
+.sadDropArea {
+  width: clamp(136px, 35vw, 170px);
+  aspect-ratio: 1;
+  border-radius: clamp(18px, 4vw, 24px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.sadDropArea.dragOver {
+  transform: scale(1.08);
+  background: rgba(255, 192, 214, 0.35);
+}
+
+.mikaelaPic {
+  width: min(100%, clamp(118px, 30vw, 150px));
+  max-width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.cakePic {
+  width: clamp(76px, 18vw, 95px);
+  height: auto;
+  display: block;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  filter: drop-shadow(0 10px 12px rgba(122, 47, 79, 0.25));
+  transition: transform 0.25s ease, opacity 0.3s ease;
+}
+
+.cakePic:hover {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.cakePic:active {
+  cursor: grabbing;
+}
+
+.cakePic.hideCake {
+  opacity: 0;
+  transform: scale(0.2);
+  pointer-events: none;
+}
+
+.mikaelaPic.happyPop {
+  animation: happyPop 0.6s ease;
+}
+
+@keyframes happyPop {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInCake {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .screen {
+    justify-content: center;
+  }
+
+  .letterBox {
+    max-height: min(84vh, 84svh);
+  }
+}
+
+@media (max-height: 760px) {
+  .screen {
+    justify-content: flex-start;
+    padding-top: clamp(18px, 5vh, 32px);
+    padding-bottom: clamp(18px, 5vh, 32px);
+  }
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+  .envelopeWrapper {
+    width: min(48vw, 250px);
+    height: calc(min(48vw, 250px) * 0.81);
+  }
+
+  h1 {
+    margin-top: 14px;
+  }
+
+  .letterBox {
+    max-height: min(88vh, 88svh);
+  }
+}
