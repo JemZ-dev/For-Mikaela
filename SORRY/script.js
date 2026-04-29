@@ -112,12 +112,91 @@ function showCakeSection() {
   }
 }
 
+function finishCakeDrop() {
+  if (!cakeImage || !mikaelaImage || cakeImage.classList.contains("hideCake")) {
+    return;
+  }
+
+  sadDropArea.classList.remove("dragOver");
+  cakeImage.classList.add("hideCake");
+
+  setTimeout(() => {
+    cakeImage.style.display = "none";
+    cakeImage.style.transform = "";
+    cakeImage.style.opacity = "";
+    mikaelaImage.style.opacity = "0";
+
+    setTimeout(() => {
+      mikaelaImage.src = "images/happy-cake.png";
+      mikaelaImage.style.opacity = "1";
+      mikaelaImage.classList.add("happyPop");
+    }, 300);
+  }, 250);
+}
+
+function isOverDropArea() {
+  if (!cakeImage || !sadDropArea) {
+    return false;
+  }
+
+  const cakeRect = cakeImage.getBoundingClientRect();
+  const dropRect = sadDropArea.getBoundingClientRect();
+
+  const cakeCenterX = cakeRect.left + cakeRect.width / 2;
+  const cakeCenterY = cakeRect.top + cakeRect.height / 2;
+
+  return (
+    cakeCenterX >= dropRect.left &&
+    cakeCenterX <= dropRect.right &&
+    cakeCenterY >= dropRect.top &&
+    cakeCenterY <= dropRect.bottom
+  );
+}
+
 /* Cake drag and drop */
 const cakeImage = document.getElementById("cakeImage");
 const sadDropArea = document.getElementById("sadDropArea");
 const mikaelaImage = document.getElementById("mikaelaImage");
 
 if (cakeImage && sadDropArea && mikaelaImage) {
+  let activePointerId = null;
+  let startX = 0;
+  let startY = 0;
+  let currentX = 0;
+  let currentY = 0;
+
+  function updateCakePosition(x, y) {
+    currentX = x - startX;
+    currentY = y - startY;
+    cakeImage.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+    if (isOverDropArea()) {
+      sadDropArea.classList.add("dragOver");
+    } else {
+      sadDropArea.classList.remove("dragOver");
+    }
+  }
+
+  function resetCakePosition() {
+    cakeImage.style.transition = "transform 0.25s ease";
+    cakeImage.style.transform = "";
+    sadDropArea.classList.remove("dragOver");
+
+    setTimeout(() => {
+      if (!cakeImage.classList.contains("hideCake")) {
+        cakeImage.style.transition = "";
+      }
+    }, 250);
+  }
+
+  function stopPointerDrag() {
+    if (activePointerId !== null) {
+      cakeImage.releasePointerCapture(activePointerId);
+    }
+
+    activePointerId = null;
+  }
+
   cakeImage.addEventListener("dragstart", function (event) {
     event.dataTransfer.setData("text/plain", "cake");
   });
@@ -133,19 +212,52 @@ if (cakeImage && sadDropArea && mikaelaImage) {
 
   sadDropArea.addEventListener("drop", function (event) {
     event.preventDefault();
+    finishCakeDrop();
+  });
 
-    sadDropArea.classList.remove("dragOver");
-    cakeImage.classList.add("hideCake");
+  cakeImage.addEventListener("pointerdown", function (event) {
+    activePointerId = event.pointerId;
+    startX = event.clientX - currentX;
+    startY = event.clientY - currentY;
+    cakeImage.setPointerCapture(activePointerId);
+    cakeImage.style.transition = "none";
+    cakeImage.style.cursor = "grabbing";
+    event.preventDefault();
+  });
 
-    setTimeout(() => {
-      cakeImage.style.display = "none";
-      mikaelaImage.style.opacity = "0";
+  cakeImage.addEventListener("pointermove", function (event) {
+    if (activePointerId !== event.pointerId) {
+      return;
+    }
 
-      setTimeout(() => {
-        mikaelaImage.src = "images/happy-cake.png";
-        mikaelaImage.style.opacity = "1";
-        mikaelaImage.classList.add("happyPop");
-      }, 300);
-    }, 250);
+    updateCakePosition(event.clientX, event.clientY);
+  });
+
+  function endPointerDrag(event) {
+    if (activePointerId !== event.pointerId) {
+      return;
+    }
+
+    cakeImage.style.cursor = "grab";
+
+    if (isOverDropArea()) {
+      stopPointerDrag();
+      finishCakeDrop();
+      return;
+    }
+
+    stopPointerDrag();
+    currentX = 0;
+    currentY = 0;
+    resetCakePosition();
+  }
+
+  cakeImage.addEventListener("pointerup", endPointerDrag);
+  cakeImage.addEventListener("pointercancel", endPointerDrag);
+
+  cakeImage.addEventListener("lostpointercapture", function () {
+    if (!cakeImage.classList.contains("hideCake")) {
+      cakeImage.style.cursor = "grab";
+    }
   });
 }
